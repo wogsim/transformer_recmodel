@@ -1,0 +1,58 @@
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "src"
+version = "0.0.1"
+description = "A short description of the project."
+authors = [
+  { name = "Stepanov Simen" },
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License"
+]
+dependencies = [
+    "ipython",
+    "jupyterlab",
+    "loguru",
+    "matplotlib",
+    "mkdocs",
+    "notebook",
+    "numpy",
+    "pandas",
+    "pip",
+    "pytest",
+    "python-dotenv",
+    "ruff",
+    "scikit-learn",
+    "tqdm",
+    "typer",
+    "torch",
+    "polars",
+]
+requires-python = "~=3.11.0"
+
+
+[tool.ruff]
+select = ["I", "E", "F", "W", "B", "N", "ANN"]
+line-length = 88 
+exclude = ["data", "notebooks", ".venv", ".git", "docs"]
+src = ["src"]
+ignore = ["ANN401"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+
+[dependency-groups]
+dev = [
+    "pre-commit (>=4.3.0,<5.0.0)"
+]
