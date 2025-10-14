@@ -5,8 +5,8 @@ from loguru import logger
 from torch import optim
 from torch.utils.data import DataLoader
 
-from src.config import LEARNING_SETTINGS, MODEL_SETTINGS, PROCESSED_DATA_DIR
-from src.model.model import ModelBackbone, PretrainModel
+from src.config import LEARNING_SETTINGS, MODEL_SETTINGS, MODELS_DIR, PROCESSED_DATA_DIR
+from src.model.model import FinetuneModel
 from src.model.train_models import train_pretrain_model
 from src.modeling.utils import collate_fn
 
@@ -18,8 +18,8 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     logger.info("Loading datasets... ")
-    train_ds = pl.read_parquet(PROCESSED_DATA_DIR / "pretrain_train_data.parquet")
-    valid_ds = pl.read_parquet(PROCESSED_DATA_DIR / "pretrain_valid_data.parquet")
+    train_ds = pl.read_parquet(PROCESSED_DATA_DIR / "finetune_train_data.parquet")
+    valid_ds = pl.read_parquet(PROCESSED_DATA_DIR / "finetune_valid_data.parquet")
 
     train_loader = DataLoader(
         train_ds,
@@ -36,18 +36,15 @@ def main() -> None:
 
     logger.info("Loading datasets complete.")
 
-    backbone = ModelBackbone(
-        embedding_dim=MODEL_SETTINGS["EMBEDDING_DIM"],
-        num_heads=MODEL_SETTINGS["NUM_HEADS"],
-        max_seq_len=MODEL_SETTINGS["MAX_SEQ_LEN"],
-        dropout_rate=MODEL_SETTINGS["DROPOUT_RATE"],
-        num_transformer_layers=MODEL_SETTINGS["NUM_TRANSFORMER_LAYERS"],
-    )
-    model_pretrain = PretrainModel(
-        backbone=backbone, embedding_dim=MODEL_SETTINGS["EMBEDDING_DIM"]
+    model_pretrain = torch.load(MODELS_DIR / "pretrain.pt", weights_only=False)
+    model_finetune = FinetuneModel(
+        model_pretrain.backbone, embedding_dim=MODEL_SETTINGS["EMBEDDING_DIM"]
     ).to(device)
+    model_finetune.user_context_fusion = model_pretrain.user_context_fusion
+    model_finetune.candidate_projector = model_pretrain.candidate_projector
+
     optimizer = torch.optim.AdamW(
-        model_pretrain.parameters(),
+        model_finetune.parameters(),
         lr=LEARNING_SETTINGS["LEARNING_RATE"],
         weight_decay=0.01,
     )
@@ -56,10 +53,10 @@ def main() -> None:
         start_factor=LEARNING_SETTINGS["START_FACTOR"],
         total_iters=LEARNING_SETTINGS["WARMUP_EPOCHS"],
     )
-    logger.info("Training pretrain model...")
+    logger.info("Training finetune model...")
 
     train_pretrain_model(
-        model=model_pretrain,
+        model=model_finetune,
         train_loader=train_loader,
         valid_loader=valid_loader,
         optimizer=optimizer,

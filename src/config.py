@@ -21,6 +21,27 @@ MODELS_DIR = PROJ_ROOT / "models"
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 
+MIN_LENGTH_HISTORY = 5
+MAX_LENGTH_HISTORY = 512
+
+# learn setting
+LEARNING_SETTINGS = {
+    "LEARNING_RATE": 0.001,
+    "BATCH_SIZE": 8,
+    "WARMUP_EPOCHS": 4,
+    "START_FACTOR": 0.1,
+    "NUM_EPOCH": 100,
+}
+
+# model settings
+MODEL_SETTINGS = {
+    "EMBEDDING_DIM": 64,
+    "NUM_HEADS": 2,
+    "MAX_SEQ_LEN": 512,
+    "DROPOUT_RATE": 0.2,
+    "NUM_TRANSFORMER_LAYERS": 2,
+}
+
 # If tqdm is installed, configure loguru with tqdm.write
 # https://github.com/Delgan/loguru/issues/135
 try:

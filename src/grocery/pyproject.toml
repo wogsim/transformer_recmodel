@@ -1,0 +1,39 @@
+[project]
+name = "grocery"
+version = "0.1.0"
+description = "Toy RecSys library"
+authors = [
+    {name = "Roma Nigmatullin", email = "roman.nigmatullinm@gmail.com"},
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "catboost>=1.2.5",
+    "joblib>=1.4.2",
+    "matplotlib>=3.10.1",
+    "numpy~=1.26.4",
+    "polars>=1.22.0",
+    "requests>=2.32.3",
+    "scikit-learn>=1.6.1",
+    "scipy>=1.15.2",
+    "tqdm>=4.67.1",
+    "voyager>=2.1.0",
+]
+
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3.4",
+    "ruff>=0.9.6",
+]
+
+[tool.uv.workspace]
+members = ["grocery"]
+
+
+[project.scripts]
+grocery = "grocery:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

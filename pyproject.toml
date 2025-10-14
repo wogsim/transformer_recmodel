@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [project]
 name = "src"
 version = "0.0.1"
-description = "A short description of the project."
+description = "Two-tower recommendation model with transformer"
 authors = [
   { name = "Stepanov Simen" },
 ]
@@ -33,16 +33,22 @@ dependencies = [
     "typer",
     "torch",
     "polars",
+    "grocery @ file:///D:/my_project/transformer_recsys/src/grocery",
 ]
 requires-python = "~=3.11.0"
+packages = [
+    { include = "src", from = "." }, 
+]
 
+[tool.poetry.dependencies]
+grocery = {develop = true}
 
 [tool.ruff]
-select = ["I", "E", "F", "W", "B", "N", "ANN"]
+select = ["I", "E", "F", "W", "B", "N"]
 line-length = 88 
 exclude = ["data", "notebooks", ".venv", ".git", "docs"]
 src = ["src"]
-ignore = ["ANN401"]
+ignore = [ "B905", "E501", "N806"]
 
 [tool.ruff.format]
 quote-style = "double"
