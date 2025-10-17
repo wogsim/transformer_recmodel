@@ -28,6 +28,7 @@ def train_pretrain_model(
         action_losses = []
         retrieval_losses = []
         for batch in tqdm(train_loader):
+            print(batch)
             batch = move_to_device(batch, device)
             print(batch)
             optimizer.zero_grad()

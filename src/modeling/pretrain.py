@@ -6,6 +6,7 @@ from torch import optim
 from torch.utils.data import DataLoader
 
 from src.config import LEARNING_SETTINGS, MODEL_SETTINGS, PROCESSED_DATA_DIR
+from src.data.dataset import LavkaDataset
 from src.model.model import ModelBackbone, PretrainModel
 from src.model.train_models import train_pretrain_model
 from src.modeling.utils import collate_fn
@@ -18,8 +19,15 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     logger.info("Loading datasets... ")
-    train_ds = pl.read_parquet(PROCESSED_DATA_DIR / "pretrain_train_data.parquet")
-    valid_ds = pl.read_parquet(PROCESSED_DATA_DIR / "pretrain_valid_data.parquet")
+    pretrain_train_data = pl.read_parquet(
+        PROCESSED_DATA_DIR / "pretrain_train_data.parquet"
+    )
+    pretrain_valid_data = pl.read_parquet(
+        PROCESSED_DATA_DIR / "pretrain_valid_data.parquet"
+    )
+
+    train_ds = LavkaDataset.from_dataframe(pretrain_train_data)
+    valid_ds = LavkaDataset.from_dataframe(pretrain_valid_data)
 
     train_loader = DataLoader(
         train_ds,

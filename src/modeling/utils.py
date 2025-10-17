@@ -56,3 +56,21 @@ def move_to_device(
         return [move_to_device(item, device) for item in batch]
     elif isinstance(batch, tuple):
         return tuple(move_to_device(item, device) for item in batch)
+
+
+def convert_dict_to_tensor(data_dict: dict) -> torch.Tensor:
+    """
+    Recursively converts lists within a dictionary to PyTorch tensors with dtype=torch.int64.
+
+    @param data_dict: A dictionary potentially containing nested dictionaries and lists.
+    @return: A new dictionary with the same structure as `data_dict`, but with lists converted to PyTorch tensors.
+    """
+    if not isinstance(data_dict, dict):
+        if isinstance(data_dict, str):
+            return data_dict
+        return torch.tensor(data_dict, dtype=torch.int64)
+    else:
+        new_dict = {}
+        for key in data_dict:
+            new_dict[key] = convert_dict_to_tensor(data_dict[key])
+    return new_dict

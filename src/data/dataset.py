@@ -9,7 +9,6 @@ class LavkaDataset(Dataset):
     @classmethod
     def from_dataframe(cls, df: pl.DataFrame) -> 'LavkaDataset':
         converted_data = [convert_dict_to_tensor(group) for group in df.to_struct()]
-
         return cls(converted_data)
 
     def __len__(self):
