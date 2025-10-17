@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 from src.config import LEARNING_SETTINGS, MODEL_SETTINGS, MODELS_DIR, PROCESSED_DATA_DIR
 from src.data.dataset import LavkaDataset
 from src.model.model import FinetuneModel
-from src.model.train_models import train_pretrain_model
+from src.model.train_models import train_finetune_model
 from src.modeling.utils import collate_fn
 
 app = typer.Typer()
@@ -63,7 +63,7 @@ def main() -> None:
     )
     logger.info("Training finetune model...")
 
-    train_pretrain_model(
+    train_finetune_model(
         model=model_finetune,
         train_loader=train_loader,
         valid_loader=valid_loader,
