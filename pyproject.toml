@@ -33,15 +33,12 @@ dependencies = [
     "typer",
     "torch",
     "polars",
-    "grocery @ file:///D:/my_project/transformer_recsys/src/grocery",
+    "grocery",
 ]
 requires-python = "~=3.11.0"
-packages = [
-    { include = "src", from = "." }, 
-]
 
 [tool.poetry.dependencies]
-grocery = {develop = true}
+grocery = { path = "./src/grocery", develop = true}
 
 [tool.ruff]
 select = ["I", "E", "F", "W", "B", "N"]
